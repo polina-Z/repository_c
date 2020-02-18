@@ -6,9 +6,21 @@ int main(void)
 {
     int n;
     float f;
-    float p;
+    float p = 1.0;
     printf("Enter n: ");
-
-    printf("Enter f:");
+    scanf_s("%d", &n);
+    printf("Enter f: ");
+    scanf_s("%f", &f);
+    for (int i = 1; i < n; i++)
+    {
+        float denom = 0;
+        for (int j = 0; j < i; j++)
+        {
+            denom += f + j;
+        }
+        p = p * (1 / denom);
+    }
+    printf("p=");
+    printf("%f", p);
     return 0;
 }
