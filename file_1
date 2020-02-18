@@ -1,1 +1,14 @@
-lab_1
+/*lab_1*/
+
+#include <stdio.h>
+
+int main(void)
+{
+    int n;
+    float f;
+    float p;
+    printf("Enter n: ");
+
+    printf("Enter f:");
+    return 0;
+}
