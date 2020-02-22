@@ -1,53 +1,54 @@
 /*lab_1*/
 
-#include <stdio.h>
+#define MAX_LEN 2147483646
 
+#include <stdio.h>
 
 int main(void)
 {
-    int n = 0;
-    float f = 0;
-    float p = 1.0;
-    char term1, term2, zn;
+	int n = 0;
+	float f = 0;
+	float p = 1.0;
+	char term1, term2, zn;
 	
-    printf("Enter n: ");
-    while (1)
-    {
-        rewind(stdin);
-	if (scanf_s("%d%c", &n, &term1) != 2 || term1 != '\n')
+	printf("Enter n: ");
+	while (1)
 	{
-	    printf("Sorry, enter an integer number.\n");
+		rewind(stdin);
+		if (scanf_s("%d%c", &n, &term1) != 2 || term1 != '\n' || n <= 0 || n > MAX_LEN)
+		{
+			printf("Sorry, enter a positive integer number.\n");
+		}
+		else
+		{
+			break;
+		}
 	}
-	else
-	{
-	    break;
-	}
-    }
 
-    printf("Enter f: ");
-    while (1)
-    {
-        rewind(stdin);
-	if (scanf_s("%f%c", &f, &term2) != 2 || term2 != '\n')
+	printf("Enter f: ");
+	while (1)
 	{
-	    printf("Sorry, enter a fractional number.\n");
+		rewind(stdin);
+		if (scanf_s("%f%c", &f, &term2) != 2 || term2 != '\n' || f == 0 || f > MAX_LEN)
+		{
+			printf("Sorry, enter a fractional number.\n");
+		}
+		else
+		{
+			break;
+		}
 	}
-	else
-	{
-	    break;
-	}
-    }
-    printf("%s%d%c", "\nYou entered:\nn=", n, '\n');
-    printf("%s%f%c", "f=", f, '\n');
+	printf("%s%d%c", "\nYou entered:\nn=", n, '\n');
+	printf("%s%f%c", "f=", f, '\n');
    
-    for (int i = 1; i < n; i++)
-    {
-        float denom = 0;
-	for (int j = 0; j < i; j++)
+	for (int i = 1; i <= n; i++)
 	{
-	    denom += f + j;
-	}
-	p = p * (1 / denom);
+		float denom = 0;
+		for (int j = 0; j <= i; j++)
+		{
+			denom += f + j;
+		}
+		p = p * (1 / denom);
 	}
 	printf("%s%f%c", "\nResult:\np=", p, '\n');
     return 0;
