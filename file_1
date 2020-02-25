@@ -1,6 +1,6 @@
 /*lab_1*/
 
-#define MAX_LEN 2147483646
+#define MAX 2147483646
 
 #include <stdio.h>
 
@@ -11,11 +11,11 @@ int main(void)
 	float p = 1.0;
 	char term1, term2, zn;
 	
-	printf("Enter n: ");
+	printf("Enter a positive integer n: ");
 	while (1)
 	{
 		rewind(stdin);
-		if (scanf_s("%d%c", &n, &term1) != 2 || term1 != '\n' || n <= 0 || n > MAX_LEN)
+		if (scanf_s("%d%c", &n, &term1) != 2 || term1 != '\n' || n <= 0 || n > MAX)
 		{
 			printf("Sorry, enter a positive integer number.\n");
 		}
@@ -25,11 +25,12 @@ int main(void)
 		}
 	}
 
-	printf("Enter f: ");
+	printf("Enter fractional f: ");
 	while (1)
 	{
+		check:
 		rewind(stdin);
-		if (scanf_s("%f%c", &f, &term2) != 2 || term2 != '\n' || f == 0 || f > MAX_LEN)
+		if (scanf_s("%f%c", &f, &term2) != 2 || term2 != '\n' || f > MAX || ((2 * f + n) == 0))
 		{
 			printf("Sorry, enter a fractional number.\n");
 		}
@@ -47,6 +48,11 @@ int main(void)
 		for (int j = 0; j <= i; j++)
 		{
 			denom += f + j;
+		}
+		if (denom == 0)
+		{
+			printf("Sorry, the denominator is 0, enter f again\nf=");
+			goto check;
 		}
 		p = p * (1 / denom);
 	}
