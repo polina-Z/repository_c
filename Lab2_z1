@@ -3,6 +3,7 @@
 #define EPS 1e-12
 
 #include <stdio.h>
+#include <malloc.h>
 #include <stdlib.h>
 #include <Windows.h> 
 int flag = 0;
@@ -13,9 +14,9 @@ struct  car
 	int year;
 	float volume;
 	float distance;
-	float haulage_cost;
-	float customs_clearance_cost;
-	float total_price;
+	float HaulageCost;
+	float CustomsClearanceCost;
+	float TotalPrice;
 };
 
 struct car Zero()
@@ -25,9 +26,9 @@ struct car Zero()
 	vehicle.year = 0;
 	vehicle.volume = 0;
 	vehicle.distance = 0;
-	vehicle.haulage_cost = 0;
-	vehicle.customs_clearance_cost = 0;
-	vehicle.total_price = 0;
+	vehicle.HaulageCost = 0;
+	vehicle.CustomsClearanceCost = 0;
+	vehicle.TotalPrice = 0;
 	return vehicle;
 }
 
@@ -143,54 +144,54 @@ struct car Add_item()
 		{
 			if (flag1 == 1)
 			{
-				vehicle.haulage_cost = (float)0.5 * vehicle.distance;
+				vehicle.HaulageCost = (float)0.5 * vehicle.distance;
 			}
 			else
 			{
-				vehicle.haulage_cost = 0;
+				vehicle.HaulageCost = 0;
 			}
 
 			if (flag2 == 1 && flag3 == 1)
 			{
 				if (vehicle.year <= 3)
 				{
-					vehicle.customs_clearance_cost = (float)0.6 * vehicle.volume;
+					vehicle.CustomsClearanceCost = (float)0.6 * vehicle.volume;
 				}
 
 				if (vehicle.year > 3 && vehicle.year <= 10)
 				{
 					if (vehicle.volume < 2500)
 					{
-						vehicle.customs_clearance_cost = (float)0.35 * vehicle.volume;
+						vehicle.CustomsClearanceCost = (float)0.35 * vehicle.volume;
 					}
-					else vehicle.customs_clearance_cost = (float)0.6 * vehicle.volume;
+					else vehicle.CustomsClearanceCost = (float)0.6 * vehicle.volume;
 				}
 
 				if (vehicle.year > 10 && vehicle.year < 14)
 				{
-					vehicle.customs_clearance_cost = (float)0.6 * vehicle.volume;
+					vehicle.CustomsClearanceCost = (float)0.6 * vehicle.volume;
 				}
 
 				if (vehicle.year >= 14)
 				{
-					vehicle.customs_clearance_cost = (float)2 * vehicle.volume;
+					vehicle.CustomsClearanceCost = (float)2 * vehicle.volume;
 				}
 			}
 			else
 			{
 				
-				vehicle.customs_clearance_cost = 0;
+				vehicle.CustomsClearanceCost = 0;
 
 			}
 
 			if (flag1 == 1 && flag2 == 1 && flag3 == 1)
 			{
-				vehicle.total_price = vehicle.customs_clearance_cost + vehicle.haulage_cost;
+				vehicle.TotalPrice = vehicle.CustomsClearanceCost + vehicle.HaulageCost;
 			}
 			else
 			{
 				printf("Сначала введите объем двигателя, год выпуска автомобиля и расстояние прогона\n");
-				vehicle.total_price = 0;
+				vehicle.TotalPrice = 0;
 			}
 		}
 
@@ -214,14 +215,14 @@ void Information(const struct car* Transport, int counter)
 	{
 		if (counter == 0)
 		{
-			printf("%2d %10.2f %10d %10.4f %10.4f %10.2f", 1, Transport[0].cost, Transport[0].year, Transport[0].volume, Transport[0].distance, Transport[0].total_price);
+			printf("%2d %10.2f %10d %10.4f %10.4f %10.2f", 1, Transport[0].cost, Transport[0].year, Transport[0].volume, Transport[0].distance, Transport[0].TotalPrice);
 			printf("\n");
 		}
 		else
 		{
 			for (i = 0; i < counter + 1; i++)
 			{
-				printf("%3d %10.2f %10d %10.4f %10.4f %10.2f", i + 1, Transport[i].cost, Transport[i].year, Transport[i].volume, Transport[i].distance, Transport[i].total_price);
+				printf("%3d %10.2f %10d %10.4f %10.4f %10.2f", i + 1, Transport[i].cost, Transport[i].year, Transport[i].volume, Transport[i].distance, Transport[i].TotalPrice);
 				printf("\n");
 			}
 		}
@@ -349,5 +350,6 @@ int main()
 		}
 		printf("\n");
 	}
+	free(Transport);
 	return 0;
 }
