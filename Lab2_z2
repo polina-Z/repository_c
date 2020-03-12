@@ -13,7 +13,7 @@ double verification_f()
 	while (1)
 	{
 		rewind(stdin);
-		if (scanf_s("%lf%c", &f, &term) != 2 || term != '\n' || (f > MAX_F&& f < -MAX_F) || f < 0 || (f > -EPS && f < EPS))
+		if (scanf_s("%lf%c", &f, &term) != 2 || term != '\n' || (f > MAX_F&& f < -MAX_F))
 		{
 			printf("Неверный ввод. \n");
 		}
@@ -25,7 +25,7 @@ double verification_f()
 	return f;
 }
 
-double fact(long double check, double x, int n)
+double fact(long double check, double x, long long int n)
 {
 	check = (check * x * x) / ((n - 1) * n);
 	return check;
@@ -49,17 +49,18 @@ int main()
 	do
 	{
 		epsilon = verification_f();
-		if (epsilon > 1)
+		if (epsilon >= 1 || epsilon < 0 || (epsilon > -EPS && epsilon < EPS))
 		{
 			printf("Введите epsilon большее 0, но меньше 1\n");
 		}
 	} 
-	while (epsilon > 1);
+	while (epsilon >= 1 || epsilon < 0 || (epsilon > -EPS && epsilon < EPS));
 	
 	while (sinX != sin(x))
 	{
 		n += 2;
-		check = (-1)*fact(check, x, n);
+		/*check = (-1) * fact(check, x, n);*/
+		check = (-1) * (check * x * x) / ((n - 1) * n);
 		sinX = sinX + check;
 		
 		if (fabs(sinX - sin(x)) < epsilon)
@@ -67,7 +68,7 @@ int main()
 			break;
 		}
 	}
-	printf("%s %ld", "n =", n);
+	printf("%s %lld", "n =", n);
 	printf("%s %lf", "\nsin(x) =", sin(x));
 	printf("%s %lf", "\nsinX =", sinX);
 	return 0;
