@@ -59,8 +59,7 @@ int main()
 	while (sinX != sin(x))
 	{
 		n += 2;
-		/*check = (-1) * fact(check, x, n);*/
-		check = (-1) * (check * x * x) / ((n - 1) * n);
+		check = (-1) * fact(check, x, n);		
 		sinX = sinX + check;
 		
 		if (fabs(sinX - sin(x)) < epsilon)
