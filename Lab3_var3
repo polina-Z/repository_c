@@ -101,6 +101,11 @@ void encoder()
 		}
 	}
 	printf("\n");
+	for (int i = 0; i < counter; i++)
+	{
+		free(array[i]);
+	}
+	free(array);
 }
 
 void decoder()
@@ -180,6 +185,11 @@ void decoder()
 		printf("%c", array[counter / 2][counter / 2]);
 	}
 	printf("\n");
+	for (int i = 0; i < counter; i++)
+	{
+		free(array[i]);
+	}
+	free(array);
 }
 
 int main()
