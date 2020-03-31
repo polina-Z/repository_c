@@ -1,0 +1,114 @@
+#define MAX 2147483646
+#define MAX_F 3.402823466e+35F
+#define EPS 1e-12
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <string.h>
+
+int main()
+{
+	char symbol;
+	int counter = 0, k = 0;
+	char* string;
+	int check = 50;
+	char alphabet[123];
+	char *matchcheck, separator[] = " ,.?!:';\n*/<>_{}[]";
+	char engl[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz {}[],.?!:';\n*/<>_1234567890";
+	for (int i = 0; i < 123; i++)
+	{
+		alphabet[i] = ' ';
+	}
+	printf("Please, enter text\n");
+	if ((string = (char*)malloc(100 * sizeof(char))) == NULL)
+	{
+		printf("Memory allocation error");
+		return 0;
+	}
+	rewind(stdin);
+	if (string)
+	{
+		/*Ввод текста*/
+		while ((symbol = getchar()) != '*')
+		{
+			if (strchr(engl, symbol) == NULL)
+			{
+				printf("\nInvalid characters entered\n");
+				return 0;
+			}
+
+			string[counter] = symbol;
+			counter++;
+			if (counter > check * 2 - 1)
+			{
+				check = counter;
+				if ((string = (char*)realloc(string, (2 * counter) * sizeof(char))) == NULL)
+				{
+					printf("Memory allocation error");
+					break;
+				}
+			}
+		}
+		string[counter] = '\0';
+
+		/*Вывод введенного текста*/
+		printf("\n\nEntered text\n");
+		printf("%s", string);
+
+		/*Поиск слов, которые начинаются и заканчиваются на одну и ту же букву*/
+		matchcheck = strtok(string, separator);
+		char* newtext;
+		if ((newtext = (char*)malloc(counter * sizeof(char))) == NULL)
+		{
+			printf("Memory allocation error");
+			return 0;
+		}
+
+		while (matchcheck)
+		{
+			if (*matchcheck == *(matchcheck + strlen(matchcheck) - 1))
+			{
+				for (int i = 0; i < strlen(matchcheck); i++)
+				{
+					newtext[k++] = string[matchcheck - string + i];
+				}
+				newtext[k] = ' ';
+				k++;
+			}
+			matchcheck = strtok(NULL, separator);
+		}
+		newtext[k] = '\0';
+		printf("\n\nNew text\n");
+		
+		/*Первые вхождения каждой буквы*/
+		counter = k;
+		for (int i = 0; i < counter; i++)
+		{
+			if (alphabet[newtext[i]] != ' ')
+			{
+				for (int j = i; j < counter - 1; j++)
+				{
+					newtext[j] = newtext[j + 1];
+				}
+				counter--;
+				i--;
+			}
+
+			if ((newtext[i] == ' ') && (newtext[i + 1] == ' '))
+			{
+				for (int j = i; j < counter - 1; j++)
+				{
+					newtext[j] = newtext[j + 1];
+				}
+				counter--;
+			}
+			
+			alphabet[newtext[i]] = newtext[i];
+		}
+		puts(newtext);
+		free(newtext);
+	}
+	free(string);
+	return 0;
+}
