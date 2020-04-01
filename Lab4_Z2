@@ -1,0 +1,134 @@
+#define MAX 2147483646
+#define MAX_F 3.402823466e+35F
+#define EPS 1e-12
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <string.h>
+
+
+int main()
+{	
+	FILE *fp;
+	char* string;
+	int check = 50;
+	int counter = 0;
+	char symbol;
+	int flag = 0;
+	char numb[] = "-1234567890 \n";
+	if ((string = (char*)malloc(100 * sizeof(char))) == NULL)
+	{
+		printf("Memory allocation error");
+		return 0;
+	}
+
+	if ((fp = fopen("D:/2 sem/C/lab4/zad4.2/Debug/Lab.txt","r")) == NULL)
+	{
+		printf("File open error.\n");
+		return 0;
+	} 
+	else printf("File open.\n");
+
+	if (string)
+	{
+		/*Считывание текста*/
+		symbol = getc(fp);
+		while (symbol != EOF)
+		{
+			if (strchr(numb, symbol) == NULL)
+			{
+				printf("\nInvalid characters entered\n");
+				return 0;
+			}
+			string[counter++] = symbol;
+			symbol = getc(fp);
+			if (counter > check * 2 - 1)
+			{
+				check = counter;
+				if ((string = (char*)realloc(string, (2 * counter) * sizeof(char))) == NULL)
+				{
+					printf("Memory allocation error");
+					break;
+				}
+			}
+		}
+		string[counter] = '\0';
+		fclose(fp);
+
+		/*Вывод введенного текста*/
+		printf("\n\nEntered text\n");
+		printf("%s", string);
+
+		/*Перевод из char массива в массив int*/
+
+		int* numbers;
+		char* matchcheck;
+		char** newtext;
+		int i = 0;
+		check = 0;
+		int perem = 0;
+		int k = 0;
+
+		matchcheck = strtok(string, " ");
+		
+		if ((newtext = (char*)malloc(counter * sizeof(char))) == NULL)
+		{
+			printf("Memory allocation error");
+			return 0;
+		}
+
+		if ((numbers = (int*)malloc(counter * sizeof(int))) == NULL)
+		{
+			printf("Memory allocation error");
+			return 0;
+		}
+
+		while (matchcheck)
+		{
+			for (int i = 0; i < strlen(matchcheck); i++)
+			{
+				if (i == 0)
+				{
+					if ((newtext[k] = (char*)malloc((strlen(matchcheck) + 1) * sizeof(char))) == NULL)
+					{
+						printf("Memory allocation error");
+						return 0;
+					}
+				}
+
+				if (string[matchcheck - string + i] == '-')
+				{
+					flag = 1;
+					continue;
+				}
+				newtext[k][check++] = string[matchcheck - string + i];
+			}
+
+			if (flag == 1)
+			{
+				numbers[k] = 0 - atoi(newtext[k]);
+				flag = 0;
+			}
+			else numbers[k] = atoi(newtext[k]);
+			check = 0;
+			k++;
+			matchcheck = strtok(NULL, " ");
+		}
+
+		check = 0;
+		float sum = 0;
+		for (int i = 0; i < k; i++)
+		{
+			if (numbers[i] > 0)
+			{
+				sum += numbers[i];
+				check++;
+			}
+		}
+		sum = sum / check;
+		printf("\n");
+		printf("%.3f", sum);
+	}
+	return 0;
+}
