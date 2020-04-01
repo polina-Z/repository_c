@@ -1,6 +1,7 @@
 #define MAX 2147483646
 #define MAX_F 3.402823466e+35F
 #define EPS 1e-12
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +18,7 @@ int main()
 	char symbol;
 	int flag = 0;
 	char numb[] = "-1234567890 \n";
+
 	if ((string = (char*)malloc(100 * sizeof(char))) == NULL)
 	{
 		printf("Memory allocation error");
@@ -65,14 +67,12 @@ int main()
 		int* numbers;
 		char* matchcheck;
 		char** newtext;
-		int i = 0;
 		check = 0;
-		int perem = 0;
 		int k = 0;
 
 		matchcheck = strtok(string, " ");
 		
-		if ((newtext = (char*)malloc(counter * sizeof(char))) == NULL)
+		if ((newtext = (char**)malloc(counter * sizeof(char*))) == NULL)
 		{
 			printf("Memory allocation error");
 			return 0;
@@ -129,6 +129,15 @@ int main()
 		sum = sum / check;
 		printf("\n");
 		printf("%.3f", sum);
+
+		
+		for (int i = 0; i < k; i++)
+		{
+			free(newtext[i]);
+		}
+		free(newtext);
+		free(numbers);
 	}
+	free(string);
 	return 0;
 }
