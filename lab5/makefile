@@ -4,7 +4,7 @@ TARGET = lab5
 all: $(TARGET)
 
 clean: 
-	@del $(TARGET) *.o *.exe
+	@rm -rf $(TARGET) *.o *.exe
 
 build: $(TARGET)
 
