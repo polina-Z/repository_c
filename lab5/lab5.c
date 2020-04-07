@@ -26,7 +26,7 @@ int VerificationI()
 		rewind(stdin);
 		if (scanf("%d%c", &choice, &term1) != 2 || term1 != '\n' || choice <= 0 || choice > MAX)
 		{
-			printf("Íåïðàâèëüíûé ââîä.\n");
+			printf("Incorrect entry.\n");
 		}
 		else
 		{
@@ -92,7 +92,7 @@ int main()
 	{
 		ListItemZ(list);
 		int counter;
-		printf("");
+		printf("Enter number of elements.\n");
 		counter = VerificationI();
 		for (int i = 0; i < counter; i++)
 		{

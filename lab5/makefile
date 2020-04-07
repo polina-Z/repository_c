@@ -1,23 +1,31 @@
 LAB = lab5
-.PHONY: all build run clean valgrind
+CC = gcc
+.PHONY: all build run clean valgrind splint
 
 all: $(LAB)
 
 clean: 
 	@rm -rf $(LAB) *.o *.exe
 
-build: $(Lab)
+build: $(LAB)
 
 $(LAB): $(LAB).o
-	gcc -o $(LAB) $(LAB).o
+	$(CC) -o $(LAB) $(LAB).o
 
 $(LAB).o: $(LAB).c
-	gcc -c $(LAB).c
+	$(CC) -c $(LAB).c
 
 run: 
-	$(LAB) 
+	$(LAB)
 
-valgrind:
-	valgrind --leak-check=full -v $(LAB) 
+valgrind: a.out
+	valgrind --leak-check=full -v ./$(LAB).exe
+
+a.out: $(LAB).c
+	$(CC) -g $(LAB).c
+
+splint:
+	splint $(LAB).c
+
 
  
