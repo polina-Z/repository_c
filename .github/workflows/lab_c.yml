@@ -1,0 +1,17 @@
+name: Check
+on: 
+  pull_request:
+    branches: [ Lab_C ]
+  push:
+     branches: [ Lab_C ]
+jobs:
+  build: 
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: action/checkout@Lab_C
+      - name: build
+        run: cd lab_check5  && make build
+      - name: run 
+        run: cd lab5  && make run
+      - name: clean
+        run: cd lab5  && make clean
