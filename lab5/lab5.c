@@ -25,7 +25,7 @@ int VerificationI()
 	while (1)
 	{
 		rewind(stdin);
-		if (scanf_s("%d%c", &choice, &term1, 102) != 2 || term1 != '\n' || choice <= 0 || choice > MAX)
+		if (scanf("%d%c", &choice, &term1) != 2 || term1 != '\n' || choice <= 0 || choice > MAX)
 		{
 			printf("Неправильный ввод.\n");
 		}
