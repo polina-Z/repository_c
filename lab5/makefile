@@ -1,20 +1,24 @@
-TARGET = lab5
-.PHONY: all build run clean
+Lab = lab5
+.PHONY: all build run clean valgrind
 
-all: $(TARGET)
+all: $(Lab)
 
 clean: 
-	@rm -rf $(TARGET) *.o *.exe
+	@rm -rf $(Lab) *.o *.exe
 
-build: $(TARGET)
+build: $(Lab)
 
-$(TARGET): $(TARGET).o
-	gcc -o $(TARGET) $(TARGET).o
+$(Lab): $(Lab).o
+	gcc -o $(Lab) $(Lab).o
 
-$(TARGET).o: $(TARGET).c
-	gcc -c $(TARGET).c
+$(Lab).o: $(Lab).c
+	gcc -c $(Lab).c
 
 run: 
-	$(TARGET) 
+	$(Lab) 
+
+valgrind:
+	valgring --leak-check=full -v $(Lab)
+
 
  
