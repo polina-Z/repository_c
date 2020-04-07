@@ -26,7 +26,7 @@ int VerificationI()
 		rewind(stdin);
 		if (scanf("%d%c", &choice, &term1) != 2 || term1 != '\n' || choice <= 0 || choice > MAX)
 		{
-			printf("Неправильный ввод.\n");
+			printf("ГЌГҐГЇГ°Г ГўГЁГ«ГјГ­Г»Г© ГўГўГ®Г¤.\n");
 		}
 		else
 		{
