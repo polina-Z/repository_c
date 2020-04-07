@@ -1,5 +1,5 @@
 LAB = lab5
-.PHONY: all build run clean
+.PHONY: all build run clean valgrind
 
 all: $(LAB)
 
@@ -16,5 +16,8 @@ $(LAB).o: $(LAB).c
 
 run: 
 	$(LAB) 
+
+valgrind:
+	valgrind --leak-check=full -v $(LAB) 
 
  
