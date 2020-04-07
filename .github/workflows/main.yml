@@ -11,5 +11,5 @@ jobs:
     - uses: actions/checkout@master  
     - name: build
       run: cd lab5 && make 
-    - name: make clean
+    - name: clean
       run: cd lab5 && make clean
