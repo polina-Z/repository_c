@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #define MAX 2147483646
 
 #include <stdlib.h>
