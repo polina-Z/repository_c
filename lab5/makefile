@@ -1,19 +1,20 @@
+TARGET = lab5
 .PHONY: all build run clean
 
-all: lab5
+all: $(TARGET)
 
 clean: 
-	del lab5 *.o *.exe
+	@del $(TARGET) *.o *.exe
 
-build: lab5
+build: $(TARGET)
 
-lab5: lab5.o
-	gcc -o lab5 lab5.o
+$(TARGET): $(TARGET).o
+	gcc -o $(TARGET) $(TARGET).o
 
-lab5.o: lab5.c
-	gcc -c lab5.c
+$(TARGET).o: $(TARGET).c
+	gcc -c $(TARGET).c
 
 run: 
-	lab5 
+	$(TARGET) 
 
  
