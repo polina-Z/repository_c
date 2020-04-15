@@ -20,13 +20,16 @@ struct ListItem
 int VerificationI()
 {
 	int choice = 0;
-	char term1;
-	while (1)
+	char term1 = ' ';
+	for(;;)
 	{
 		rewind(stdin);
 		if (scanf("%d%c", &choice, &term1) != 2 || term1 != '\n' || choice <= 0 || choice > MAX)
 		{
 			printf("Incorrect entry.\n");
+			choice = 0;
+			term1 = ' ';
+			while ((char)getchar() != '\n');
 		}
 		else
 		{
@@ -59,7 +62,6 @@ void AddList(struct ListItem* list, int data)
 		{	
 			list->tail->next = item;
 			list->tail = item;
-			
 		}
 	}
 	else exit(0);
@@ -87,24 +89,25 @@ void Reverse(struct Node* list, struct ListItem* newlist)
 int main()
 {
 	srand(time(NULL));
+	int counter;
+	int i = 0;
 	struct ListItem* list = (struct ListItem*)malloc(sizeof(struct ListItem));
+	struct ListItem* newlist = (struct ListItem*)malloc(sizeof(struct ListItem));
 	if (list)
 	{
 		ListItemZ(list);
-		int counter;
 		printf("Enter number of elements.\n");
 		counter = VerificationI();
-		for (int i = 0; i < counter; i++)
+		for (i = 0; i < counter; i++)
 		{
 			AddList(list, rand()%100);
 		}
 
 		PrintList(list->head);
 		printf("\n");
-		struct ListItem* newlist = (struct ListItem*)malloc(sizeof(struct ListItem));
-		ListItemZ(newlist);
 		if (newlist != NULL)
 		{
+			ListItemZ(newlist);
 			Reverse(list->tail, newlist);
 			PrintList(newlist->head);
 		}

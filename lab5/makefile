@@ -5,7 +5,7 @@ CC = gcc
 all: $(LAB)
 
 clean: 
-	@rm -rf $(LAB) *.o *.exe
+	@rm -rf $(LAB) *.o *.exe *.out
 
 build: $(LAB)
 
@@ -13,19 +13,20 @@ $(LAB): $(LAB).o
 	$(CC) -o $(LAB) $(LAB).o
 
 $(LAB).o: $(LAB).c
-	$(CC) -c $(LAB).c
+	$(CC) -c $(LAB).c -std=c89
 
 run: 
-	$(LAB)
+	./$(LAB)
 
 valgrind: a.out
-	valgrind --leak-check=full -v ./$(LAB).exe
+	valgrind --leak-check=full -v ./lab5.exe
 
 a.out: $(LAB).c
 	$(CC) -g $(LAB).c
 
 splint:
-	splint $(LAB).c
+	splint lab5.c
+
 
 
  
