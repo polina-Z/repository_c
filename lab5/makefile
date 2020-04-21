@@ -19,13 +19,13 @@ run:
 	./$(LAB)
 
 valgrind: a.out
-	valgrind --leak-check=full -v ./lab5.exe
+	valgrind --leak-check=full -v ./$(LAB).exe
 
 a.out: $(LAB).c
 	$(CC) -g $(LAB).c
 
 splint:
-	splint lab5.c
+	splint $(LAB).c
 
 
 
