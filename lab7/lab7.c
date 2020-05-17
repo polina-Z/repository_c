@@ -17,6 +17,7 @@ int Verification(int n)
 		if (scanf("%d%c", &choice, &term1) != 2 || term1 != '\n' || choice <= 0 || choice > n)
 		{
 			printf("Wrong input. Enter the number.\n");
+			while ((char)getchar() != '\n');
 		}
 		else
 		{
@@ -35,6 +36,7 @@ float VerificationCost()
 		if (scanf("%f%c", &f, &term) != 2 || term != '\n' || (f > MAX_F && f < -MAX_F) || f < 0 || (f > -EPS && f < EPS))
 		{
 			printf("Wrong enter. Try again\n");
+			while ((char)getchar() != '\n');
 		}
 		else
 		{
