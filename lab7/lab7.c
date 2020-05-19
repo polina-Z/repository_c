@@ -17,6 +17,7 @@ int Verification(int n)
 		if (scanf("%d%c", &choice, &term1) != 2 || term1 != '\n' || choice <= 0 || choice > n)
 		{
 			printf("Wrong input. Enter the number.\n");
+			while ((char)getchar() != '\n');
 		}
 		else
 		{
@@ -35,6 +36,7 @@ float VerificationCost()
 		if (scanf("%f%c", &f, &term) != 2 || term != '\n' || (f > MAX_F && f < -MAX_F) || f < 0 || (f > -EPS && f < EPS))
 		{
 			printf("Wrong enter. Try again\n");
+			while ((char)getchar() != '\n');
 		}
 		else
 		{
@@ -256,10 +258,10 @@ struct ListOfReaders* AddToListReader(struct ListOfReaders* readers, struct Read
 	return NULL;
 }
 
-struct CardReader* AddToCardList(struct CardReader* card, char *bookTitle, char* dateOfIssue)
+struct CardReader* AddToCardList(struct CardReader* card, char* bookTitle, char* dateOfIssue)
 {
 	struct NodeCard* item = (struct NodeCard*)malloc(sizeof(struct NodeCard));
-	if (card!= NULL)
+	if (card != NULL)
 	{
 		if (item != NULL)
 		{
@@ -307,6 +309,24 @@ struct NodeReader* DeleteCardReader(struct NodeReader* temp)
 				struct NodeCard* card = temp->reader.cardReader->head;
 				while (temp->reader.cardReader->head != NULL && temp->reader.cardReader->size != 0)
 				{
+					if (temp->reader.cardReader->head->dateOfIssue != NULL)
+					{
+						free(temp->reader.cardReader->head->dateOfIssue);
+					}
+					if (temp->reader.cardReader->head->nameOfBook != NULL)
+					{
+						free(temp->reader.cardReader->head->nameOfBook);
+					}
+					if (temp->reader.cardReader->head->returnDate != NULL && temp->reader.cardReader->head->returnDate != "")
+					{
+						free(temp->reader.cardReader->head->returnDate);
+					}
+					if (temp->reader.cardReader->size == 1)
+					{
+						free(temp->reader.cardReader->head);
+						temp->reader.cardReader->size--;
+						continue;
+					}
 					card = temp->reader.cardReader->head;
 					temp->reader.cardReader->head = card->next;
 					card->next->prev = NULL;
@@ -328,10 +348,30 @@ struct NodeReader* DeleteCardReader(struct NodeReader* temp)
 struct ListOfReaders* DeleteReader(struct NodeReader* temp, struct ListOfReaders* readers)
 {
 	if (readers->head != NULL)
-	{	
+	{
 		if (temp != NULL)
 		{
 			temp = DeleteCardReader(temp);
+			if (temp->reader.surname != NULL)
+			{
+				free(temp->reader.surname);
+			}
+			if (temp->reader.name != NULL)
+			{
+				free(temp->reader.name);
+			}
+			if (temp->reader.phoneNumber != NULL)
+			{
+				free(temp->reader.phoneNumber);
+			}
+			if (temp->reader.email != NULL)
+			{
+				free(temp->reader.email);
+			}
+			if (temp->reader.noteReader != NULL && temp->reader.noteReader != "")
+			{
+				free(temp->reader.noteReader);
+			}
 			if (readers->size != 1)
 			{
 				if (temp->prev != NULL)
@@ -384,6 +424,18 @@ struct ListOfBooks* DeleteBook(struct NodeBook* temp, struct ListOfBooks* books)
 	{
 		if (temp != NULL)
 		{
+			if (temp->book.author != NULL)
+			{
+				free(temp->book.author);
+			}
+			if (temp->book.title != NULL)
+			{
+				free(temp->book.title);
+			}
+			if (temp->book.note != NULL && temp->book.note != "")
+			{
+				free(temp->book.note);
+			}
 			if (books->size != 1)
 			{
 				if (temp->prev != NULL)
@@ -442,7 +494,7 @@ char* CheckLetter(int choice)
 	char* string;
 	char symbol;
 	int notLetter = 0;
-	if ((string = (char*)malloc(100 * sizeof(char))) == NULL)
+	if ((string = (char*)calloc(100, sizeof(char))) == NULL)
 	{
 		printf("Memory allocation error");
 		return 0;
@@ -451,7 +503,7 @@ char* CheckLetter(int choice)
 	{
 		for (i = 0; i < counter + 1; i++)
 		{
-			string[i] = "";
+			string[i] = ' ';
 		}
 		counter = 0;
 		notLetter = 0;
@@ -572,14 +624,13 @@ int CheckDate(char* str)
 
 char* AddDate()
 {
-	char* date = (char*)malloc(11 * sizeof(char));
+	char* date = (char*)calloc(11, sizeof(char));
 	printf("Enter date(**.**.****)\n");
 	do
 	{
 		rewind(stdin);
 		scanf("%s", date);
-	} 
-	while (CheckDate(date) != 1);
+	} while (CheckDate(date) != 1);
 	return date;
 }
 
@@ -635,6 +686,11 @@ struct Reader AddReader(struct Reader reader)
 		reader.noteReader = "";
 		break;
 	}
+	reader.cardReader = (struct CardReader*)malloc(sizeof(struct CardReader));
+	if (reader.cardReader != NULL)
+	{
+		reader.cardReader = CardReaderConstructor(reader.cardReader);
+	}
 	return reader;
 }
 
@@ -688,12 +744,12 @@ void ShowReaders(struct ListOfReaders* readers)
 			}
 			switch (temp->reader.colorOfCard)
 			{
-				case Green:
-					printf("Color of card: Green\n");
-					break;
-				case Red:
-					printf("Color of card: Red\n");
-					break;
+			case Green:
+				printf("Color of card: Green\n");
+				break;
+			case Red:
+				printf("Color of card: Red\n");
+				break;
 			}
 
 			if (temp->reader.cardReader->head != NULL)
@@ -814,8 +870,8 @@ struct NodeReader* FindReader(struct NodeReader* temp)
 
 struct ListOfReaders* TakeBook(struct ListOfReaders* readers, struct ListOfBooks* books)
 {
-	 if (readers->head != NULL && books->head != NULL)
-	 {
+	if (readers->head != NULL && books->head != NULL)
+	{
 		int count = 0;
 		ShowReaders(readers);
 		printf("Who wants to take a book? Enter surname and name\n");
@@ -836,8 +892,19 @@ struct ListOfReaders* TakeBook(struct ListOfReaders* readers, struct ListOfBooks
 				{
 					if (tempBook->book.bookCopies.remainingAmount != 0)
 					{
+						int count = 0;
 						tempBook->book.bookCopies.remainingAmount--;
-						temp->reader.cardReader = AddToCardList(temp->reader.cardReader, tempBook->book.title, AddDate());
+						while (tempBook->book.title[count] != '\0')
+						{
+							count++;
+						}
+						char* titleBook = (char*)calloc(count + 1, sizeof(char));
+						if (titleBook == NULL) 
+						{
+							exit(0);
+						}
+						strcpy(titleBook, tempBook->book.title);
+						temp->reader.cardReader = AddToCardList(temp->reader.cardReader, titleBook, AddDate());
 						return readers;
 					}
 					else
@@ -877,7 +944,7 @@ struct NodeCard* FindBookInCard(struct NodeCard* card)
 	title = CheckLetter(1);
 	if (card != NULL)
 	{
-		while((card != NULL) && (strcmp(card->nameOfBook, title) != 0))
+		while ((card != NULL) && (strcmp(card->nameOfBook, title) != 0))
 		{
 			card = card->next;
 		}
@@ -957,14 +1024,14 @@ void ShowOneReader(struct NodeReader* temp)
 	}
 	switch (temp->reader.colorOfCard)
 	{
-		case Green:
-			printf("Color of card: Green\n");
-			break;
-		case Red:
-			printf("Color of card: Red\n");
-			break;
+	case Green:
+		printf("Color of card: Green\n");
+		break;
+	case Red:
+		printf("Color of card: Red\n");
+		break;
 	}
-	
+
 	if (temp->reader.cardReader->head != NULL)
 	{
 		printf("Card Reader\n");
@@ -1023,41 +1090,41 @@ struct ListOfBooks* EditBookInformation(struct ListOfBooks* books, struct ListOf
 		choice = Verification(5);
 		switch (choice)
 		{
-			case 1:
-				printf("Author: ");
-				newInfo = CheckLetter(1);
-				book->book.author = newInfo;
-				break;
-			case 2:
-				printf("Title: ");
-				newInfo = CheckLetter(1);
-				struct NodeReader* tempReader = readers->head;
-				struct NodeCard* tempCard = tempReader->reader.cardReader->head;
-				while (tempReader != NULL)
+		case 1:
+			printf("Author: ");
+			newInfo = CheckLetter(1);
+			book->book.author = newInfo;
+			break;
+		case 2:
+			printf("Title: ");
+			newInfo = CheckLetter(1);
+			struct NodeReader* tempReader = readers->head;
+			struct NodeCard* tempCard = tempReader->reader.cardReader->head;
+			while (tempReader != NULL)
+			{
+				while (tempCard != NULL)
 				{
-					while (tempCard != NULL)
+					if (strcmp(tempCard->nameOfBook, book->book.title) == 0)
 					{
-						if (strcmp(tempCard->nameOfBook, book->book.title) == 0)
-						{
-							tempCard->nameOfBook = newInfo;
-						}
-						tempCard = tempCard->next;
+						tempCard->nameOfBook = newInfo;
 					}
-					tempReader = tempReader->next;
+					tempCard = tempCard->next;
 				}
-				book->book.title = newInfo;
-				break;
-			case 3:
+				tempReader = tempReader->next;
+			}
+			book->book.title = newInfo;
+			break;
+		case 3:
 
-				break;
-			case 4:
-				printf("Cost: ");
-				newCost = VerificationCost();
-				book->book.cost = newCost;
-				choice = 0;
-				break;
-			case 5:
-				return books;
+			break;
+		case 4:
+			printf("Cost: ");
+			newCost = VerificationCost();
+			book->book.cost = newCost;
+			choice = 0;
+			break;
+		case 5:
+			return books;
 		}
 		printf("Do you want to continue changing the information?\n1.Yes\n2.No\n");
 		choice = Verification(2);
@@ -1098,41 +1165,41 @@ struct ListOfReaders* EditReaderInformation(struct ListOfReaders* readers)
 		choice = Verification(7);
 		switch (choice)
 		{
-			case 1:
-				printf("Surname: ");
-				newInfo = CheckLetter(1);
-				reader->reader.surname = newInfo;
-				break;
-			case 2:
-				printf("Name: ");
-				newInfo = CheckLetter(1);
-				reader->reader.name = newInfo;
+		case 1:
+			printf("Surname: ");
+			newInfo = CheckLetter(1);
+			reader->reader.surname = newInfo;
+			break;
+		case 2:
+			printf("Name: ");
+			newInfo = CheckLetter(1);
+			reader->reader.name = newInfo;
 
-				break;
-			case 3:
-				printf("Group number: ");
-				choice = Verification(999999);
-				reader->reader.groupNumber = choice;
-				break;
-			case 4:
-				printf("Phone number: ");
-				newInfo = CheckLetter(2);
-				reader->reader.phoneNumber = newInfo;
+			break;
+		case 3:
+			printf("Group number: ");
+			choice = Verification(999999);
+			reader->reader.groupNumber = choice;
+			break;
+		case 4:
+			printf("Phone number: ");
+			newInfo = CheckLetter(2);
+			reader->reader.phoneNumber = newInfo;
 
-				break;
-			case 5:
-				printf("Email: ");
-				newInfo = CheckLetter(3);
-				reader->reader.email = newInfo;
+			break;
+		case 5:
+			printf("Email: ");
+			newInfo = CheckLetter(3);
+			reader->reader.email = newInfo;
 
-				break;
-			case 6:
-				printf("Note: ");
-				newInfo = CheckLetter(1);
-				reader->reader.noteReader = newInfo;
-				break;
-			case 7:
-				return readers;
+			break;
+		case 6:
+			printf("Note: ");
+			newInfo = CheckLetter(1);
+			reader->reader.noteReader = newInfo;
+			break;
+		case 7:
+			return readers;
 		}
 		printf("Do you want to continue changing the information?\n1.Yes\n2.No\n");
 		choice = Verification(2);
@@ -1189,7 +1256,7 @@ void Reporting(struct ListOfBooks* books, struct ListOfReaders* readers)
 			numberOfBooks += book->book.bookCopies.numberOfBooks;
 			cost += (book->book.cost * book->book.bookCopies.numberOfBooks);
 			numberBooksOnHand = (book->book.bookCopies.numberOfBooks - book->book.bookCopies.remainingAmount);
-			book = book->next;			
+			book = book->next;
 		}
 		printf("The number of books in the library: %d\n", numberOfBooks);
 		printf("Total cost of books: %f\n", cost);
@@ -1217,7 +1284,7 @@ void DeleteAll(struct ListOfBooks* books, struct ListOfReaders* readers)
 	}
 	while (books->head != NULL)
 	{
-		books = DeleteReader(books->head, books);
+		books = DeleteBook(books->head, books);
 	}
 }
 
@@ -1256,105 +1323,105 @@ int main()
 			choice = Verification(16);
 			switch (choice)
 			{
-				case 1:
-					book = AddBook(book);
-					library->books = AddToListBook(library->books, book);
-					break;
-				case 2:
-					reader = AddReader(reader);
-					library->readers = AddToListReader(library->readers, reader);
-					break;
-				case 3:
-					library->books = AddBookInstances(library->books);
-					break;
-				case 4:
-					library->readers = TakeBook(library->readers, library->books);
-					break;
-				case 5:
-					library->readers = ReturnBook(library->readers, library->books);
-					break;
-				case 6:
-					if (library->books->head != NULL)
-					{
-						printf("Which book do you want to delete? Enter the title\n");
-						findBook = FindBook(library->books->head);
-						if (findBook != NULL)
-						{
-							library->books = DeleteBook(findBook, library->books);
-						}
-						else
-						{
-							printf("There is no such book\n");
-						}
-					}
-					break;
-				case 7:
-					if (library->readers->head != NULL)
-					{
-						printf("Enter the surname and name of the reader you want to delete\n");
-						findReader = FindReader(library->readers->head);
-						if (findReader != NULL)
-						{
-							library->readers = DeleteReader(findReader, library->readers);
-						}
-					}
-					break;
-				case 8:
-					library->books = EditBookInformation(library->books, library->readers);
-					break;
-				case 9:
-					library->readers = EditReaderInformation(library->readers);
-					break;
-				case 10:
-					printf("Which reader do you want to determine the status of? enter surname and name\n");
-					findReader = FindReader(library->readers->head);
-					if (findReader != NULL)
-					{
-						library->readers = DetermineReaderStatus(findReader, library->readers);
-					}
-					else
-					{
-						printf("There is no such reader\n");
-					}
-					break;
-				case 11:
-					Reporting(library->books, library->readers);
-					break;
-				case 12:
-					ShowBooks(library->books);
-					break;
-				case 13:
-					ShowReaders(library->readers);
-					break;
-				case 14:
-					printf("Enter the name of the book you want to find\n");
+			case 1:
+				book = AddBook(book);
+				library->books = AddToListBook(library->books, book);
+				break;
+			case 2:
+				reader = AddReader(reader);
+				library->readers = AddToListReader(library->readers, reader);
+				break;
+			case 3:
+				library->books = AddBookInstances(library->books);
+				break;
+			case 4:
+				library->readers = TakeBook(library->readers, library->books);
+				break;
+			case 5:
+				library->readers = ReturnBook(library->readers, library->books);
+				break;
+			case 6:
+				if (library->books->head != NULL)
+				{
+					printf("Which book do you want to delete? Enter the title\n");
 					findBook = FindBook(library->books->head);
 					if (findBook != NULL)
 					{
-						ShowOneBook(findBook);
+						library->books = DeleteBook(findBook, library->books);
 					}
 					else
 					{
 						printf("There is no such book\n");
 					}
-					break;
-				case 15:
-					printf("Who do you want to find? Enter surname and name\n");
+				}
+				break;
+			case 7:
+				if (library->readers->head != NULL)
+				{
+					printf("Enter the surname and name of the reader you want to delete\n");
 					findReader = FindReader(library->readers->head);
 					if (findReader != NULL)
 					{
-						ShowOneReader(findReader);
+						library->readers = DeleteReader(findReader, library->readers);
 					}
-					else
-					{
-						printf("There is no such reader\n");
-					}
-					break;
-				case 16:
-					DeleteAll(library->books, library->readers);
-					free(library->readers);
-					free(library->books);
-					return 0;
+				}
+				break;
+			case 8:
+				library->books = EditBookInformation(library->books, library->readers);
+				break;
+			case 9:
+				library->readers = EditReaderInformation(library->readers);
+				break;
+			case 10:
+				printf("Which reader do you want to determine the status of? enter surname and name\n");
+				findReader = FindReader(library->readers->head);
+				if (findReader != NULL)
+				{
+					library->readers = DetermineReaderStatus(findReader, library->readers);
+				}
+				else
+				{
+					printf("There is no such reader\n");
+				}
+				break;
+			case 11:
+				Reporting(library->books, library->readers);
+				break;
+			case 12:
+				ShowBooks(library->books);
+				break;
+			case 13:
+				ShowReaders(library->readers);
+				break;
+			case 14:
+				printf("Enter the name of the book you want to find\n");
+				findBook = FindBook(library->books->head);
+				if (findBook != NULL)
+				{
+					ShowOneBook(findBook);
+				}
+				else
+				{
+					printf("There is no such book\n");
+				}
+				break;
+			case 15:
+				printf("Who do you want to find? Enter surname and name\n");
+				findReader = FindReader(library->readers->head);
+				if (findReader != NULL)
+				{
+					ShowOneReader(findReader);
+				}
+				else
+				{
+					printf("There is no such reader\n");
+				}
+				break;
+			case 16:
+				DeleteAll(library->books, library->readers);
+				free(library->readers);
+				free(library->books);
+				return 0;
 			}
 
 		}
